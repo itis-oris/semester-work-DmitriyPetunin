@@ -15,13 +15,12 @@ public class InitListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         try {
-            ConnectionProvider connectionProvider = ConnectionProvider.getInstance();
             sce.getServletContext().setAttribute("travelService",new TravelService());
             sce.getServletContext().setAttribute("userService",new UserService());
             sce.getServletContext().setAttribute("imageService",new ImagesService());
             sce.getServletContext().setAttribute("locationService",new LocationService());
         } catch (DbException e) {
-            throw new RuntimeException(e);
+            new RuntimeException(e);
         }
     }
 }

@@ -1,0 +1,57 @@
+body {
+    background-color: #f8f9fa; /* Светло-серый фон */
+    font-family: Arial, sans-serif; /* Шрифт для всего документа */
+    margin: 0; /* Убираем стандартные отступы */
+    height: 100vh;
+}
+.signing-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%; /* Высота контейнера - 100% от родителя */
+}
+
+/* Style for the form */
+#loginForm {
+    background-color: #fff; /* White background for the form */
+    padding: 2em; /* Padding inside the form */
+    border-radius: 5px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Shadow for the form */
+    align-content: center;
+    justify-content: center;
+    width: 300px; /* Width of the form */
+}
+
+/* Style for labels */
+.control-label {
+    font-weight: bold; /* Bold font for labels */
+    margin-bottom: 0.5em; /* Bottom margin for labels */
+}
+
+/* Style for input fields */
+.form-control {
+    border-radius: 4px; /* Rounded corners */
+    border: 1px solid #ced4da; /* Border color */
+}
+
+/* Style for button */
+.btn-success {
+    background-color: #28a745; /* Green background */
+    color: white; /* White text */
+    border: none; /* No border */
+    border-radius: 4px; /* Rounded corners */
+    padding: 0.5em 1em; /* Padding inside the button */
+    cursor: pointer; /* Pointer on hover */
+    transition: background-color 0.3s; /* Smooth color transition */
+}
+
+.btn-success:hover {
+    background-color: #218838; /* Button color on hover */
+}
+
+/* Style for error messages */
+.alert {
+    margin-top: 1em; /* Top margin */
+    padding: 1em; /* Padding inside the alert */
+    border-radius: 4px; /* Rounded corners */
+}
