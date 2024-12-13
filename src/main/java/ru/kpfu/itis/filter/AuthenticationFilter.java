@@ -12,7 +12,7 @@
 //@WebFilter(urlPatterns = "/*")
 //public class AuthenticationFilter implements Filter {
 //
-//
+//    private final String[] publicPages = {""};
 //    @Override
 //    public void init(FilterConfig filterConfig) throws ServletException {
 //        Filter.super.init(filterConfig);

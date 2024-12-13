@@ -12,6 +12,7 @@
 
     <link rel="stylesheet" href="<c:url value="/style/bootstrap.min.css"/>">
     <link rel="stylesheet" href="<c:url value="/style/main.css"/>">
+
 </head>
 <body>
 <%@include file="/WEB-INF/view/parts/nav.jsp" %>

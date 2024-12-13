@@ -13,6 +13,7 @@ import ru.kpfu.itis.util.PasswordUtil;
 import ru.kpfu.itis.util.UserNotFoundException;
 
 import java.io.IOException;
+import java.util.SortedMap;
 import java.util.logging.Logger;
 
 @WebServlet(name = "registerServlet", urlPatterns = "/register")
@@ -37,14 +38,24 @@ public class RegisterServlet extends HttpServlet {
         String email = req.getParameter("email");
         String password = PasswordUtil.encrypt(req.getParameter("password"));
         String name = req.getParameter("name");
+        String age = req.getParameter("age");
 
-        if (email != null && password != null) {
-
-            UserRegistrationDto userRegistrationDto = new UserRegistrationDto(name,email,password);
+        if (!email.trim().isEmpty() && !password.trim().isEmpty() &&
+                !name.isEmpty() && !age.isEmpty()) {
+            UserRegistrationDto userRegistrationDto = UserRegistrationDto.builder()
+                    .name(name)
+                    .email(email)
+                    .password(password)
+                    .age(Integer.parseInt(age))
+                    .build();
             userService.register(userRegistrationDto);
-            req.setAttribute("user",userRegistrationDto);
+            userService.auth(req,userRegistrationDto);
+            
             LOGGER.info("Registration success");
-            req.getRequestDispatcher("/WEB-INF/view/users/profile.jsp").forward(req,resp);
+            resp.sendRedirect("/profile");
+        } else {
+            resp.sendRedirect("/register");
+            //req.getRequestDispatcher("/WEB-INF/view/security/register.jsp").forward(req,resp);
         }
     }
 }

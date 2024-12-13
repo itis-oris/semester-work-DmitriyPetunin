@@ -28,27 +28,31 @@ public class SignInServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.getRequestDispatcher("/WEB-INF/view/security/signin.jsp").forward(req,resp);
     }
-
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String email = req.getParameter("email");
-        String password = PasswordUtil.encrypt(req.getParameter("password"));
-        if (email != null && password != null){
+        String inputEmail = req.getParameter("email");
+        String inputPassword = PasswordUtil.encrypt(req.getParameter("password"));
+
+        if (!inputEmail.trim().isEmpty() && !inputPassword.trim().isEmpty()){
             try {
-                UserDto userDto = userService.getUserByEmailAndPassword(email,password);
-                if (userDto.getEmail().equals(email) && userDto.getPassword().equals(password)){
+                String password = userService.getPasswordByEmail(inputEmail);
+                if (password.equals(inputPassword)){
+                    UserDto userDto = userService.getUserByEmailAndPassword(inputEmail,inputPassword);
                     userService.auth(req,userDto);
 
                     LOGGER.info("auth success");
-                    resp.sendRedirect(req.getContextPath() + "/profile");
-                    //req.getRequestDispatcher("/WEB-INF/view/users/profile.jsp").forward(req,resp);
+                    resp.sendRedirect("/profile");
+                } else {
+                    req.setAttribute("error","Введён невереный пароль");
+                    req.getRequestDispatcher("/WEB-INF/view/security/signin.jsp").forward(req,resp);
                 }
             } catch (UserNotFoundException e){
                 throw new ServletException(e);
             }
         } else {
-            LOGGER.warning("Authentication failed for user: " + email);
-            resp.sendRedirect("/signin");
+            LOGGER.warning("Authentication failed for user: " + inputEmail);
+            req.setAttribute("error","Введите оставшиеся поля");
+            req.getRequestDispatcher("/WEB-INF/view/security/signin.jsp").forward(req,resp);
         }
     }
 }

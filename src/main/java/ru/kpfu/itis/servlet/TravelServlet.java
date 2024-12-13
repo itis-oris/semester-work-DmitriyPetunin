@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import ru.kpfu.itis.dao.TravelDao;
+import ru.kpfu.itis.service.LocationService;
 import ru.kpfu.itis.service.TravelService;
 import ru.kpfu.itis.util.DbException;
 
@@ -18,6 +19,7 @@ public class TravelServlet extends HttpServlet {
 
     private static final Logger logger = Logger.getLogger(TravelServlet.class.getName());
     private TravelService travelService;
+    private LocationService locationService;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
