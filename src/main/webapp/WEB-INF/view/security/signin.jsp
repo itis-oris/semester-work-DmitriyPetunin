@@ -8,15 +8,16 @@
 
 <t:mainLayout title="Sign In page">
     <div class="signing-container">
-        <form id="loginForm" class="form-horizontal" action="<c:url value="/signin"/>" method="POST">
+        <form id="loginForm" class="form-horizontal" action="<c:url value="/sign-in"/>" method="POST">
+            <h1>Аутентификация</h1>
             <div class="form-group">
-                <label class="control-label col-sm-3" for="email">Email</label>
+                <label class="control-label col-sm-3" for="email">Почта</label>
                 <div class="controls col-sm-9">
                     <input id="email" name="email" class="form-control" type="text" value=""/>
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label col-sm-3" for="password">Password</label>
+                <label class="control-label col-sm-3" for="password">Пароль</label>
                 <div class="controls col-sm-9">
                     <input id="password" name="password" class="form-control" type="password" value=""/>
                 </div>
@@ -24,7 +25,7 @@
             <c:if test="${error != null}">
                 <div id="error" class="alert alert-danger">${error}</div>
             </c:if>
-            <button type="submit" class="btn btn-success">Sign in</button>
+            <button type="submit" class="btn btn-success">Войти</button>
         </form>
     </div>
 </t:mainLayout>

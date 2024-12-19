@@ -1,18 +1,11 @@
 package ru.kpfu.itis.service;
 
-import jakarta.servlet.http.HttpServletRequest;
-import org.eclipse.tags.shaded.org.apache.regexp.RE;
 import ru.kpfu.itis.dao.TravelDao;
-import ru.kpfu.itis.dao.UserDao;
 import ru.kpfu.itis.dto.TravelDto;
-import ru.kpfu.itis.dto.UserDto;
-import ru.kpfu.itis.dto.UserTravelDto;
 import ru.kpfu.itis.entity.Travel;
-import ru.kpfu.itis.entity.User;
-import ru.kpfu.itis.util.DbException;
-import ru.kpfu.itis.util.TravelNotFoundException;
+import ru.kpfu.itis.exception.DbException;
+import ru.kpfu.itis.exception.TravelNotFoundException;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -55,6 +48,54 @@ public class TravelService {
                 .description(travelDto.getDescription())
                 .duration(travelDto.getDuration())
                 .authorId(travelDto.getAuthor().getId())
+                .build());
+    }
+    public List<TravelDto> getTravelsByLocationId(Integer locationId){
+        return travelDao.getTravelsByLocationId(locationId).stream()
+                .map(travel -> TravelDto.builder()
+                        .id(travel.getId())
+                        .name(travel.getName())
+                        .description(travel.getDescription())
+                        .duration(travel.getDuration())
+                        .author(userService.getUserTravelDtoById(travel.getAuthorId()))
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    public List<TravelDto> getTravelsByLocationIdAndUserId(Integer locationId,Integer userId){
+        return travelDao.getTravelsByLocationId(locationId).stream()
+                .filter(travel -> travel.getAuthorId().equals(userId))
+                .map(travel -> TravelDto.builder()
+                        .id(travel.getId())
+                        .name(travel.getName())
+                        .description(travel.getDescription())
+                        .duration(travel.getDuration())
+                        .author(userService.getUserTravelDtoById(travel.getAuthorId()))
+                        .build())
+                .collect(Collectors.toList());
+    }
+    public List<TravelDto> getTravelsByUserId(Integer userId){
+        return travelDao.getTravelsByUserId(userId).stream()
+                .map(travel -> TravelDto.builder()
+                        .id(travel.getId())
+                        .name(travel.getName())
+                        .description(travel.getDescription())
+                        .duration(travel.getDuration())
+                        .author(userService.getUserTravelDtoById(travel.getAuthorId()))
+                        .build())
+                .collect(Collectors.toList());
+    }
+    public void delete(Integer travelId){
+        travelDao.delete(travelId);
+        travelDao.deleteInfoTravelLocation(travelId);
+    }
+
+    public boolean updateInfo(TravelDto travelDto){
+        return travelDao.update(Travel.builder()
+                .id(travelDto.getId())
+                .name(travelDto.getName())
+                .description(travelDto.getDescription())
+                .duration(travelDto.getDuration())
                 .build());
     }
 }

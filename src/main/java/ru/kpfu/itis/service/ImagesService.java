@@ -2,6 +2,7 @@ package ru.kpfu.itis.service;
 
 import ru.kpfu.itis.dao.ImageDao;
 import ru.kpfu.itis.dto.ImageDto;
+import ru.kpfu.itis.dto.TravelDto;
 import ru.kpfu.itis.entity.Image;
 
 import java.util.ArrayList;
@@ -33,5 +34,16 @@ public class ImagesService {
         for (ImageDto imageDto: imageDtoList){
             save(imageDto);
         }
+    }
+    public List<String> getFirstImageUrlList(List<TravelDto> travelDtos){
+        List<String> images = new ArrayList<>();
+        for (TravelDto travelDto : travelDtos){
+            if (!getImagesByTravelId(travelDto.getId()).isEmpty()){
+                images.add(getImagesByTravelId(travelDto.getId()).getFirst().getImage_url());
+            } else{
+                images.add(null);
+            }
+        }
+        return images;
     }
 }

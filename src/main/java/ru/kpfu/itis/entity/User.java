@@ -2,6 +2,7 @@ package ru.kpfu.itis.entity;
 
 import lombok.*;
 
+import java.util.Date;
 import java.util.Objects;
 @Setter
 @Getter
@@ -13,7 +14,7 @@ public class User {
     private String name;
     private String email;
     private String password;
-    private Integer age;
+    private Date dateOfBirth;
 
     @Override
     public boolean equals(Object o) {

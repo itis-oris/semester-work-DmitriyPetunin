@@ -1,4 +1,4 @@
-package ru.kpfu.itis.util;
+package ru.kpfu.itis.exception;
 
 public class DbException extends RuntimeException {
     public DbException() {

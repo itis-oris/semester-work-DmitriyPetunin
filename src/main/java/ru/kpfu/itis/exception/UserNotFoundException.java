@@ -1,4 +1,4 @@
-package ru.kpfu.itis.util;
+package ru.kpfu.itis.exception;
 
 public class UserNotFoundException extends RuntimeException{
     public UserNotFoundException() {

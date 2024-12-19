@@ -14,5 +14,4 @@ public class Travel {
     private String description;
     private String duration;
     private Integer authorId;
-    //private Set<Destination> destinations;
 }

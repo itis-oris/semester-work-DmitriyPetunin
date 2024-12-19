@@ -4,14 +4,14 @@ CREATE TABLE travels (
     description TEXT,
     duration VARCHAR(50),
     author_id INTEGER,
-    FOREIGN KEY (author_id) REFERENCES users(id)
+    FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE SET NULL
 );
 CREATE TABLE users(
     id SERIAL PRIMARY KEY,
     name VARCHAR(128) NOT NULL,
-    email varchar(255),
-    password VARCHAR(128),
-    age INTEGER
+    email varchar(255) NOT NULL,
+    password VARCHAR(128) NOT NULL,
+    date_of_birth DATE NOT NULL
 );
 CREATE TABLE images(
     id serial PRIMARY KEY,

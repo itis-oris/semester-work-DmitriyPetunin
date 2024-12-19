@@ -6,14 +6,14 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import ru.kpfu.itis.dto.UserDto;
 import ru.kpfu.itis.dto.UserRegistrationDto;
 import ru.kpfu.itis.service.UserService;
 import ru.kpfu.itis.util.PasswordUtil;
-import ru.kpfu.itis.util.UserNotFoundException;
 
 import java.io.IOException;
-import java.util.SortedMap;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Logger;
 
 @WebServlet(name = "registerServlet", urlPatterns = "/register")
@@ -38,24 +38,29 @@ public class RegisterServlet extends HttpServlet {
         String email = req.getParameter("email");
         String password = PasswordUtil.encrypt(req.getParameter("password"));
         String name = req.getParameter("name");
-        String age = req.getParameter("age");
+        String dateOfBirth = req.getParameter("date_of_birth");
+        System.out.println(dateOfBirth);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-        if (!email.trim().isEmpty() && !password.trim().isEmpty() &&
-                !name.isEmpty() && !age.isEmpty()) {
-            UserRegistrationDto userRegistrationDto = UserRegistrationDto.builder()
-                    .name(name)
-                    .email(email)
-                    .password(password)
-                    .age(Integer.parseInt(age))
-                    .build();
-            userService.register(userRegistrationDto);
-            userService.auth(req,userRegistrationDto);
-            
-            LOGGER.info("Registration success");
-            resp.sendRedirect("/profile");
-        } else {
-            resp.sendRedirect("/register");
-            //req.getRequestDispatcher("/WEB-INF/view/security/register.jsp").forward(req,resp);
+        try {
+            if (!email.trim().isEmpty() && !password.trim().isEmpty() &&
+                    !name.isEmpty() && !dateOfBirth.isEmpty()) {
+                UserRegistrationDto userRegistrationDto = UserRegistrationDto.builder()
+                        .name(name)
+                        .email(email)
+                        .password(password)
+                        .dateOfBirth(dateFormat.parse(dateOfBirth))
+                        .build();
+                userService.register(userRegistrationDto);
+                userService.auth(req, userService.getUserByEmailAndPassword(email, password));
+
+                LOGGER.info("Registration success");
+                resp.sendRedirect("/profile");
+            } else {
+                resp.sendRedirect("/register");
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
     }
 }

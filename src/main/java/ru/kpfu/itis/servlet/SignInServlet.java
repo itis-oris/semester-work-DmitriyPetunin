@@ -7,12 +7,12 @@ import jakarta.servlet.http.*;
 import ru.kpfu.itis.dto.UserDto;
 import ru.kpfu.itis.service.UserService;
 import ru.kpfu.itis.util.PasswordUtil;
-import ru.kpfu.itis.util.UserNotFoundException;
+import ru.kpfu.itis.exception.UserNotFoundException;
 
 import java.io.IOException;
 import java.util.logging.Logger;
 
-@WebServlet(name = "signInServlet",urlPatterns = "/signin")
+@WebServlet(name = "signInServlet",urlPatterns = "/sign-in")
 public class SignInServlet extends HttpServlet {
 
     private UserService userService;
@@ -31,13 +31,14 @@ public class SignInServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String inputEmail = req.getParameter("email");
-        String inputPassword = PasswordUtil.encrypt(req.getParameter("password"));
+        String inputPassword = req.getParameter("password");
+        System.out.println("%s:%s".formatted(inputEmail,inputPassword));
 
-        if (!inputEmail.trim().isEmpty() && !inputPassword.trim().isEmpty()){
+        if (inputEmail != null && inputPassword != null && !inputEmail.trim().isEmpty() && !inputPassword.trim().isEmpty()){
             try {
                 String password = userService.getPasswordByEmail(inputEmail);
-                if (password.equals(inputPassword)){
-                    UserDto userDto = userService.getUserByEmailAndPassword(inputEmail,inputPassword);
+                if (password.equals(PasswordUtil.encrypt(inputPassword))){
+                    UserDto userDto = userService.getUserByEmailAndPassword(inputEmail,PasswordUtil.encrypt(inputPassword));
                     userService.auth(req,userDto);
 
                     LOGGER.info("auth success");

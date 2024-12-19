@@ -2,12 +2,10 @@ package ru.kpfu.itis.dao;
 
 import ru.kpfu.itis.entity.User;
 import ru.kpfu.itis.util.ConnectionProvider;
-import ru.kpfu.itis.util.DbException;
+import ru.kpfu.itis.exception.DbException;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+
 public class UserDao {
 
     private static UserDao instance;
@@ -34,7 +32,7 @@ public class UserDao {
                         .name(result.getString("name"))
                         .email(result.getString("email"))
                         .password(result.getString("password"))
-                        .age(result.getInt("age"))
+                        .dateOfBirth( result.getDate("date_of_birth"))
                         .build();
             } else {
                 return null;
@@ -56,7 +54,7 @@ public class UserDao {
                         .name(result.getString("name"))
                         .email(result.getString("email"))
                         .password(result.getString("password"))
-                        .age(result.getInt("age"))
+                        .dateOfBirth(result.getDate("date_of_birth"))
                         .build();
             } else {
                 return null;
@@ -66,13 +64,13 @@ public class UserDao {
         }
     }
     public void save(User user) {
-        String sql = "INSERT INTO users (name, email, password, age) values(?,?,?,?)";
+        String sql = "INSERT INTO users (name, email, password, date_of_birth) values(?,?,?,?)";
         try (Connection connection = ConnectionProvider.getInstance().getCon()){
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, user.getName());
             preparedStatement.setString(2, user.getEmail());
             preparedStatement.setString(3, user.getPassword());
-            preparedStatement.setInt(4, user.getAge());
+            preparedStatement.setDate(4, new Date(user.getDateOfBirth().getTime()));
 
             preparedStatement.executeUpdate();
 
@@ -95,6 +93,30 @@ public class UserDao {
             }
         } catch (SQLException e) {
             throw new DbException("Can't ger password with email: " + email,e);
+        }
+    }
+    public void delete(User user){
+        String sql = "DELETE FROM users WHERE id=?";
+        try (Connection connection = ConnectionProvider.getInstance().getCon()){
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1,user.getId());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new DbException("Can't delete user with id = %s".formatted(user.getId()),e);
+        }
+    }
+    public boolean updateInformation(User user){
+        String sql = "UPDATE users SET name=?, email=?,password=? WHERE id=?";
+        try (Connection connection = ConnectionProvider.getInstance().getCon()){
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1,user.getName());
+            ps.setString(2,user.getEmail());
+            ps.setString(3,user.getPassword());
+            ps.setInt(4,user.getId());
+            int result = ps.executeUpdate();
+            return result > 0;
+        } catch (SQLException e) {
+            throw new DbException("Can't update user information with id = %s".formatted(user.getId()),e);
         }
     }
 }

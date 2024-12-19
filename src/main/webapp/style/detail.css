@@ -1,0 +1,42 @@
+.travel-page {
+    display: flex;
+    flex-direction: column;
+}
+.travel-header {
+    display: flex;
+    align-items: center;
+}
+
+.travel-name {
+    margin-right: 20px;
+}
+.travel-images-title {
+     margin: 0;
+ }
+
+.travel-details {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px
+}
+
+.travel-info {
+    flex: 1;
+    margin-right: 20px;
+}
+
+.travel-images {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+.travel-image {
+    margin: 10px 0;
+}
+.travel-image img{
+    width: 250px;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 0;
+}

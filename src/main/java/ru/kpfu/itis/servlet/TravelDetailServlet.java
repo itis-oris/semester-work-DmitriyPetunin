@@ -6,15 +6,13 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import ru.kpfu.itis.dao.TravelDao;
 import ru.kpfu.itis.dto.ImageDto;
 import ru.kpfu.itis.dto.LocationDto;
 import ru.kpfu.itis.dto.TravelDto;
-import ru.kpfu.itis.entity.Travel;
 import ru.kpfu.itis.service.ImagesService;
 import ru.kpfu.itis.service.LocationService;
 import ru.kpfu.itis.service.TravelService;
-import ru.kpfu.itis.util.DbException;
+import ru.kpfu.itis.exception.DbException;
 
 import java.io.IOException;
 import java.util.List;

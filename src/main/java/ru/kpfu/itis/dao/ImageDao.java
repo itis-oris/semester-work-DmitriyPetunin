@@ -2,7 +2,7 @@ package ru.kpfu.itis.dao;
 
 import ru.kpfu.itis.entity.Image;
 import ru.kpfu.itis.util.ConnectionProvider;
-import ru.kpfu.itis.util.DbException;
+import ru.kpfu.itis.exception.DbException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

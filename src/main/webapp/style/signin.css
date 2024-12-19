@@ -1,57 +1,55 @@
-body {
-    background-color: #f8f9fa; /* Светло-серый фон */
-    font-family: Arial, sans-serif; /* Шрифт для всего документа */
-    margin: 0; /* Убираем стандартные отступы */
-    height: 100vh;
+body{
+    background-image: url("https://res.cloudinary.com/imagesoftravel/image/upload/v1734608954/bvazg24fabj4hf0jpgdz.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 .signing-container {
     display: flex;
     justify-content: center;
-    align-items: center;
-    height: 100%; /* Высота контейнера - 100% от родителя */
+    align-items: flex-start;
+    padding-top: 50px;
+    height: 100vh;
 }
 
-/* Style for the form */
 #loginForm {
-    background-color: #fff; /* White background for the form */
-    padding: 2em; /* Padding inside the form */
-    border-radius: 5px; /* Rounded corners */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Shadow for the form */
-    align-content: center;
-    justify-content: center;
-    width: 300px; /* Width of the form */
+    width: 100%;
+    max-width: 500px;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    opacity: 0.9;
 }
 
-/* Style for labels */
+
 .control-label {
-    font-weight: bold; /* Bold font for labels */
-    margin-bottom: 0.5em; /* Bottom margin for labels */
+    font-weight: bold;
+    margin-bottom: 0.5em;
 }
 
-/* Style for input fields */
 .form-control {
-    border-radius: 4px; /* Rounded corners */
-    border: 1px solid #ced4da; /* Border color */
+    border-radius: 4px;
+    border: 1px solid #ced4da;
 }
 
-/* Style for button */
 .btn-success {
-    background-color: #28a745; /* Green background */
-    color: white; /* White text */
-    border: none; /* No border */
-    border-radius: 4px; /* Rounded corners */
-    padding: 0.5em 1em; /* Padding inside the button */
-    cursor: pointer; /* Pointer on hover */
-    transition: background-color 0.3s; /* Smooth color transition */
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 0.5em 1em;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 .btn-success:hover {
-    background-color: #218838; /* Button color on hover */
+    background-color: #218838;
 }
 
-/* Style for error messages */
 .alert {
-    margin-top: 1em; /* Top margin */
-    padding: 1em; /* Padding inside the alert */
-    border-radius: 4px; /* Rounded corners */
+    margin-top: 1em;
+    padding: 1em;
+    border-radius: 4px;
 }

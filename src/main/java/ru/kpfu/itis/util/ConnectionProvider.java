@@ -1,9 +1,13 @@
 package ru.kpfu.itis.util;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import ru.kpfu.itis.exception.DbException;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ConnectionProvider {
     private static ConnectionProvider _instance;
     private Connection con;
@@ -14,15 +18,13 @@ public class ConnectionProvider {
         return _instance;
     }
 
-    private ConnectionProvider() throws DbException{
+    public Connection getCon() {
         try {
             Class.forName("org.postgresql.Driver").newInstance();
             con = DriverManager.getConnection("jdbc:postgresql://localhost:5433/postgres","postgres","password");
         } catch (SQLException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-            throw new DbException("Can't connect to DB.", e);
+            throw new RuntimeException(e);
         }
+        return con;
     }
-
-    public Connection getCon() {
-        return con;}
 }

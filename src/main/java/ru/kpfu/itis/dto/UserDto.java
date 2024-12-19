@@ -2,6 +2,8 @@ package ru.kpfu.itis.dto;
 
 import lombok.*;
 
+import java.util.Date;
+
 @Builder
 @Getter
 @Setter
@@ -11,5 +13,5 @@ public class UserDto {
     private Integer id;
     private String name;
     private String email;
-    private Integer age;
+    private Date dateOfBirth;
 }

@@ -2,6 +2,8 @@ package ru.kpfu.itis.dto;
 
 import lombok.*;
 
+import java.util.Date;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -11,5 +13,5 @@ public class UserRegistrationDto {
     private String name;
     private String email;
     private String password;
-    private Integer age;
+    private Date dateOfBirth;
 }

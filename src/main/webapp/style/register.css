@@ -1,0 +1,23 @@
+body {
+    background-image: url("https://res.cloudinary.com/imagesoftravel/image/upload/v1734607682/ss4vdcme1xfmyzceya33.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.signing-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.form-horizontal {
+    width: 100%;
+    max-width: 500px;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    opacity: 0.9;
+}

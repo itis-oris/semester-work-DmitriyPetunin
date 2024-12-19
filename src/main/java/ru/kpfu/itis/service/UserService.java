@@ -1,16 +1,15 @@
 package ru.kpfu.itis.service;
 
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import ru.kpfu.itis.dao.UserDao;
 import ru.kpfu.itis.dto.UserDto;
 import ru.kpfu.itis.dto.UserRegistrationDto;
 import ru.kpfu.itis.dto.UserTravelDto;
 import ru.kpfu.itis.entity.User;
+import ru.kpfu.itis.exception.UserNotFoundException;
 import ru.kpfu.itis.util.PasswordUtil;
-import ru.kpfu.itis.util.UserNotFoundException;
+import ru.kpfu.itis.util.UserUtil;
 
 public class UserService {
     private final UserDao userDao = UserDao.getInstance();
@@ -23,12 +22,18 @@ public class UserService {
                 .build();
     }
     public UserTravelDto getUserTravelDtoById(Integer id){
-        User user = userDao.getById(id);
-        return UserTravelDto.builder()
-                .id(user.getId())
-                .name(user.getName())
-                .age(user.getAge())
-                .build();
+        if (id != null){
+            User user = userDao.getById(id);
+            if (user != null){
+                return UserTravelDto.builder()
+                        .id(user.getId())
+                        .name(user.getName())
+                        .age(UserUtil.calculateAge(user.getDateOfBirth()))
+                        .build();
+            } else return null;
+        } else {
+            return null;
+        }
     }
 
     public UserDto getUserByEmailAndPassword(String email,String password){
@@ -36,14 +41,15 @@ public class UserService {
         if (user == null){
             throw new UserNotFoundException("User not found");
         }
-        return new UserDto(user.getId(),user.getName(),user.getEmail(),user.getAge());
+        return UserDto.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .email(user.getEmail())
+                .dateOfBirth(user.getDateOfBirth())
+                .build();
     }
 
     public void auth(HttpServletRequest req, UserDto userDto){
-        HttpSession session = req.getSession();
-        session.setAttribute("user", userDto);
-    }
-    public void auth(HttpServletRequest req, UserRegistrationDto userDto){
         HttpSession session = req.getSession();
         session.setAttribute("user", userDto);
     }
@@ -52,7 +58,7 @@ public class UserService {
                         .name(user.getName())
                         .email(user.getEmail())
                         .password(user.getPassword())
-                        .age(user.getAge())
+                        .dateOfBirth(user.getDateOfBirth())
                         .build());
     }
     public String getPasswordByEmail(String email){
@@ -63,7 +69,7 @@ public class UserService {
         UserDto currentUser = (UserDto) session.getAttribute("user");
 
         if (currentUser == null) {
-            throw new RuntimeException("Пользователь не аутентифицирован");
+            return null;
         }
 
         return currentUser;
@@ -73,7 +79,30 @@ public class UserService {
         return UserTravelDto.builder()
                 .id(currentUser.getId())
                 .name(currentUser.getName())
-                .age(currentUser.getAge())
+                .age(UserUtil.calculateAge(currentUser.getDateOfBirth()))
                 .build();
+    }
+    public UserRegistrationDto getCurrentUserRegistrationDto(HttpServletRequest req) {
+        Integer id = getCurrentUserDto(req).getId();
+        User user = userDao.getById(id);
+        return UserRegistrationDto.builder()
+                .name(user.getName())
+                .email(user.getEmail())
+                .password(user.getPassword())
+                .dateOfBirth(user.getDateOfBirth())
+                .build();
+    }
+    public void delete(UserDto userDto){
+        userDao.delete(User.builder()
+                .id(userDto.getId())
+                .build());
+    }
+    public boolean updateInformation(UserRegistrationDto user,Integer id){
+        return userDao.updateInformation(User.builder()
+                .id(id)
+                .name(user.getName())
+                .email(user.getEmail())
+                .password(user.getPassword())
+                .build());
     }
 }

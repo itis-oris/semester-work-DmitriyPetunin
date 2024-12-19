@@ -2,7 +2,7 @@ package ru.kpfu.itis.dao;
 
 import ru.kpfu.itis.entity.Location;
 import ru.kpfu.itis.util.ConnectionProvider;
-import ru.kpfu.itis.util.DbException;
+import ru.kpfu.itis.exception.DbException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -23,6 +23,41 @@ public class LocationDao {
     }
     private LocationDao(){}
 
+    public Location getById(Integer id){
+        String sql = "SELECT * FROM locations WHERE id =?";
+        try (Connection connection = ConnectionProvider.getInstance().getCon()){
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1,id);
+            ResultSet result = ps.executeQuery();
+            if (result.next()){
+                return Location.builder()
+                        .id(result.getInt("id"))
+                        .name(result.getString("name"))
+                        .country(result.getString("country"))
+                        .build();
+            } else return null;
+        } catch (SQLException e) {
+            throw new DbException("",e);
+        }
+    }
+    public Location getByName(String name){
+        String sql = "SELECT * FROM locations WHERE name =?";
+        try (Connection connection = ConnectionProvider.getInstance().getCon()){
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1,name);
+            ResultSet result = ps.executeQuery();
+            if (result.next()){
+                return Location.builder()
+                        .id(result.getInt("id"))
+                        .name(result.getString("name"))
+                        .country(result.getString("country"))
+                        .build();
+            } else return null;
+        } catch (SQLException e) {
+            throw new DbException("",e);
+        }
+    }
+
     public Integer save(Location location){
         Integer locationId = null;
         String sql = "INSERT INTO locations(name,country) VALUES(?,?) RETURNING id";
@@ -35,7 +70,11 @@ public class LocationDao {
                 locationId = result.getInt("id");
             }
         } catch (SQLException e) {
-            throw new DbException("Can't save location", e);
+            if (e.getSQLState().equals("23505")){
+                return getByName(location.getName()).getId();
+            } else {
+                throw new DbException("Can't save location", e);
+            }
         }
         return locationId;
     }
@@ -73,6 +112,17 @@ public class LocationDao {
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new DbException("",e);
+        }
+    }
+
+    public void dropAllByTravelId(Integer travelId) {
+        String sql = "DELETE FROM travel_location WHERE travel_id=?";
+        try (Connection connection = ConnectionProvider.getInstance().getCon()){
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1,travelId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new DbException("Can't update info in table travel_location",e);
         }
     }
 }

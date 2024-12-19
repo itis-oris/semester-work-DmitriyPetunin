@@ -1,5 +1,6 @@
 package ru.kpfu.itis.servlet;
 
+import com.cloudinary.Cloudinary;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -11,25 +12,24 @@ import jakarta.servlet.http.Part;
 import ru.kpfu.itis.dto.ImageDto;
 import ru.kpfu.itis.dto.LocationDto;
 import ru.kpfu.itis.dto.TravelDto;
-import ru.kpfu.itis.service.ImagesService;
-import ru.kpfu.itis.service.LocationService;
-import ru.kpfu.itis.service.TravelService;
-import ru.kpfu.itis.service.UserService;
+import ru.kpfu.itis.service.*;
 import ru.kpfu.itis.util.CloudinaryUtil;
 
 import java.io.*;
+import java.nio.file.Paths;
 import java.util.*;
 
-@WebServlet("/createtravel")
+@WebServlet("/create-travel")
 @MultipartConfig(
-        maxFileSize = 5 * 1024 * 1024,
-        maxRequestSize = 10 * 1024 * 1024
+        maxFileSize = 32 * 1024 * 1024,
+        maxRequestSize = 32 * 1024 * 1024
 )
 public class CreateTravelServlet extends HttpServlet {
     private TravelService travelService;
     private UserService userService;
     private ImagesService imageService;
     private LocationService locationService;
+    private CloudinaryService cloudinaryService;
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
@@ -37,6 +37,7 @@ public class CreateTravelServlet extends HttpServlet {
         userService = (UserService) getServletContext().getAttribute("userService");
         imageService = (ImagesService) getServletContext().getAttribute("imageService");
         locationService = (LocationService) getServletContext().getAttribute("locationService");
+        cloudinaryService = (CloudinaryService) getServletContext().getAttribute("cloudinaryService");
     }
 
     @Override
@@ -55,15 +56,17 @@ public class CreateTravelServlet extends HttpServlet {
 
         Collection<Part> parts = req.getParts();
         try {
-            //List<String> urls = CloudinaryUtil.upload(parts);
-            for (String s : info){
-                String[] strings = s.split(":");
-                LocationDto locationDto = LocationDto.builder()
-                        .name(strings[0])
-                        .country(strings[1])
-                        .build();
-                Integer locationId = locationService.save(locationDto);
-                locationIds.add(locationId);
+            List<String> urls = cloudinaryService.uploading(parts);
+            if (info != null){
+                for (String s : info){
+                    String[] strings = s.split(":");
+                    LocationDto locationDto = LocationDto.builder()
+                            .name(strings[0])
+                            .country(strings[1])
+                            .build();
+                    Integer locationId = locationService.save(locationDto);
+                    locationIds.add(locationId);
+                }
             }
             TravelDto travelDto = TravelDto.builder()
                     .name(name)
@@ -72,11 +75,11 @@ public class CreateTravelServlet extends HttpServlet {
                     .author(userService.getCurrentUserTravelDto(req))
                     .build();
             Integer travelId = travelService.save(travelDto);
-//            imageService.saveAllImages(urls.stream().map(url -> ImageDto.builder()
-//                            .travel_id(travelId)
-//                            .image_url(url)
-//                            .build())
-//                    .toList());
+            imageService.saveAllImages(urls.stream().map(url -> ImageDto.builder()
+                            .travel_id(travelId)
+                            .image_url(url)
+                            .build())
+                    .toList());
             for (Integer locationId : locationIds) {
                 locationService.addLocationToTravel(travelId, locationId);
             }
